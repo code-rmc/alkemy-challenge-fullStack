@@ -11,6 +11,8 @@
   "author": "Rodrigo Crespo",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {

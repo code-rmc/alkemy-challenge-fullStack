@@ -23,7 +23,7 @@ class Server {
   }
 
   _routes() {
-    this.app.use(`${this.path}cash-flow`, require("../routes/cash-flow"));
+    this.app.use(`${this.path}operation`, require("../routes/operations"));
     this.app.use(`${this.path}auth/`, require("../routes/user"));
   }
 
