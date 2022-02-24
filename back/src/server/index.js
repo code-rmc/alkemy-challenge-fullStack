@@ -24,6 +24,7 @@ class Server {
 
   _routes() {
     this.app.use(`${this.path}operation`, require("../routes/operations"));
+    this.app.use(`${this.path}category`, require("../routes/categories"));
     this.app.use(`${this.path}auth/`, require("../routes/user"));
   }
 
