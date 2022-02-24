@@ -9,4 +9,8 @@ module.exports = {
   api: {
     prefix: "/api/",
   },
+  auth: {
+    secret: process.env.SECRET,
+    ttl: process.env.TTL,
+  },
 };

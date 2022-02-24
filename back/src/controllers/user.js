@@ -1,4 +1,7 @@
 const express = require("express");
+const { save } = require("../repository/user");
+const { encryptPass } = require("../helper/encryptPass");
+const { userLogin } = require("../helper/userLogin");
 
 /**
  *
@@ -6,9 +9,11 @@ const express = require("express");
  * @param {express.Response} res
  * @param {express.NextFunction} next
  */
-const login = (req, res, next) => {
+const login = async (req, res, next) => {
   try {
-    res.json({ login: "1" });
+    const { email, password } = req.body;
+    const user = await userLogin(email, password);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -20,9 +25,17 @@ const login = (req, res, next) => {
  * @param {express.Response} res
  * @param {express.NextFunction} next
  */
-const register = (req, res, next) => {
+const register = async (req, res, next) => {
   try {
-    res.json({ register: "2" });
+    const { email, name, password } = req.body;
+    const data = {
+      email,
+      name,
+      password,
+    };
+    data.password = await encryptPass(data.password);
+    const newUser = await save(data);
+    res.status(201).json(newUser);
   } catch (error) {
     next(error);
   }

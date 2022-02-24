@@ -37,15 +37,15 @@ class Server {
 
   _handlerError() {
     this.app.use((err, req, res, next) => {
-      const code = err.code || 500;
-      console.log("- ERROR: " + err.message);
+      const code = typeof err.code == "number" ? err.code : 500;
       const body = {
         error: {
           code,
-          message: err.message,
-          detail: err.data,
+          message: err?.message,
+          detail: err?.data,
         },
       };
+      console.error(body);
       res.status(code).json(body);
     });
   }

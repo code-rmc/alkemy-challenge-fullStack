@@ -1,4 +1,12 @@
 const express = require("express");
+const AppError = require("../helper/appErrors");
+const {
+  operationByUser,
+  createOperation,
+  getByIdOperation,
+  update,
+  remove,
+} = require("../repository/operations");
 
 /**
  *
@@ -8,7 +16,9 @@ const express = require("express");
  */
 const getAllOperations = async (req, res, next) => {
   try {
-    res.json({ op: 1 });
+    const { id } = req.user;
+    const oper = await operationByUser(id);
+    res.json(oper);
   } catch (error) {
     next(error);
   }
@@ -22,9 +32,18 @@ const getAllOperations = async (req, res, next) => {
  */
 const saveOperation = async (req, res, next) => {
   try {
-    const { concepto, monto, fecha, tipo } = req.body;
-
-    res.json({ concepto, monto, fecha, tipo });
+    const { id } = req.user;
+    const { categoryId, concept, amount, date, type } = req.body;
+    const data = {
+      registerId: id,
+      categoryId,
+      concept,
+      amount,
+      date,
+      type,
+    };
+    const operation = await createOperation(data);
+    res.status(201).json(operation);
   } catch (error) {
     next(error);
   }
@@ -39,7 +58,9 @@ const saveOperation = async (req, res, next) => {
 const findOperations = async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ id });
+    let operation = await getByIdOperation(id);
+    if (!operation) throw new AppError("The Id does not not exist in DB", 400);
+    res.json(operation);
   } catch (error) {
     next(error);
   }
@@ -54,8 +75,9 @@ const findOperations = async (req, res, next) => {
 const updateOperation = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    res.json({ id });
+    const dataOperation = req.body;
+    const operationUp = await update(id, dataOperation);
+    res.json(operationUp);
   } catch (error) {
     next(error);
   }
@@ -70,8 +92,8 @@ const updateOperation = async (req, res, next) => {
 const removeOperation = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    res.json({ id });
+    const operation = await remove(id);
+    res.json(operation);
   } catch (error) {
     next(error);
   }

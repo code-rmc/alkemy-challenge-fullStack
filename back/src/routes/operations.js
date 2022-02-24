@@ -6,13 +6,18 @@ const {
   updateOperation,
   removeOperation,
 } = require("../controllers/operations");
+const { confirmToken } = require("../middleware/userAuth");
+const {
+  confirmOperation,
+  confirmUpdate,
+} = require("../middleware/checkOperation");
 
 const route = Router();
 
-route.get("/", getAllOperations);
-// route.get("/:id", findOperations);
-// route.post("/", saveOperation);
-// route.put("/:id", updateOperation );
-// route.delete("/:id", removeOperation);
+route.get("/", confirmToken, getAllOperations);
+route.get("/:id", confirmToken, findOperations);
+route.post("/", confirmToken, confirmOperation, saveOperation);
+route.put("/:id", confirmToken, confirmUpdate, updateOperation);
+route.delete("/:id", confirmToken, removeOperation);
 
 module.exports = route;
