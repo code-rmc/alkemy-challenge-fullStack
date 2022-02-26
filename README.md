@@ -1,5 +1,6 @@
 # alkemy-challenge-fullStack
 Desarrollar una aplicación para administración de presupuesto personal.
+
 // Bug al desloguearse refrescar la pagina y clickear en logout
 
 ## Iniciar app
