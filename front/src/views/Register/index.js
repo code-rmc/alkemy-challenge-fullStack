@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import shallow from "zustand/shallow";
 
-import usePostLoginStore from "../../stores/loginStore";
+import useRegisterStore from "../../stores/registerStore";
 import Loading from "../../components/Loading";
-import TokenHook from "../../hook/tokenHook";
 
-export default function Login() {
+export default function Register() {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const { isLogged, addToken } = TokenHook();
-  const { setUser, sendLogin, data, isLoading, errorMessage, hasError } =
-    usePostLoginStore(
+  const [name, setName] = useState("");
+  const { setUser, setRegister, data, isLoading, errorMessage, hasError } =
+    useRegisterStore(
       (state) => ({
+        setRegister: state.setRegister,
         setUser: state.setUser,
-        sendLogin: state.sendLogin,
         data: state.data,
         isLoading: state.isLoading,
         errorMessage: state.errorMessage,
@@ -24,17 +23,13 @@ export default function Login() {
       shallow
     );
 
-  useEffect(() => {
-    if (data.token || isLogged) {
-      addToken(data);
-      navigate("../home", { replace: true });
-    }
-  }, [data, isLogged]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUser(email, pass);
-    await sendLogin(email, pass);
+    setUser(email, pass, name);
+    await setRegister();
+    if (!hasError && data) {
+      navigate("/");
+    }
   };
 
   if (isLoading) {
@@ -46,7 +41,7 @@ export default function Login() {
       {hasError ?? <p>Ha ocurrido un error: {errorMessage}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col w-80 border p-3">
         <h2 className="mt-6 mb-4 text-center text-3xl font-bold text-gray-900">
-          Login
+          Register new User
         </h2>
         <input
           className="appearance-none rounded-none relative block w-full px-3 py-2 mb-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -57,6 +52,14 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          className="appearance-none rounded-none relative block w-full px-3 py-2 mb-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+          type="text"
+          value={name}
+          name="name"
+          placeholder="Userame"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
           className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           type="password"
           value={pass}
@@ -65,13 +68,13 @@ export default function Login() {
           onChange={(e) => setPass(e.target.value)}
         />
         <button className="group relative w-full flex justify-center py-2 px-4 my-5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Login
+          Register
         </button>
         <Link
           className="bg-white-800 text-white px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 mr-3"
-          to="/register"
+          to="/"
         >
-          - Link to Register User
+          Back to login
         </Link>
       </form>
     </div>

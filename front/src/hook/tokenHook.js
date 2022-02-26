@@ -15,12 +15,13 @@ export default function TokenHook() {
 
   const logout = useCallback(() => {
     setToken(null);
+    window.sessionStorage.removeItem("jwt");
   }, [setToken]);
 
   const tokenJWT = () => token;
 
   return {
-    isLogged: Boolean(token),
+    isLogged: Boolean(token) && !(token === "null") && !(token === "undefined"),
     addToken,
     logout,
     tokenJWT,

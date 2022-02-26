@@ -7,10 +7,23 @@ const createOperation = async (data) => {
 };
 
 const operationByUser = async (userId) => {
-  return await prisma.operations.findMany({
+  const operations10 = await prisma.operations.findMany({
     take: 10,
     where: { registerId: userId },
   });
+
+  const result = await prisma.operations.findMany({
+    where: { registerId: userId },
+  });
+
+  const total = result.reduce((acc, ope) => {
+    if (ope.type === "ENTRY") {
+      return acc + Number(ope.amount);
+    }
+    return acc - Number(ope.amount);
+  }, 0);
+
+  return { operations10, total };
 };
 
 const getByIdOperation = async (id) => {

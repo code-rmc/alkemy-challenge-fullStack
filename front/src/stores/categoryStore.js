@@ -10,6 +10,16 @@ const useGetCategoryStore = create((set, get) => ({
   setTokenCategory: (tokenJWT) => {
     set({ token: tokenJWT });
   },
+  setCategories: ({ id, name }) => {
+    set({
+      categories: get().categories.map((category) => {
+        if (category.id == id) {
+          category.name = name;
+        }
+        return category;
+      }),
+    });
+  },
   // GET ALL CATEGORIES
   getAllCategories: async () => {
     try {
@@ -90,6 +100,29 @@ const useGetCategoryStore = create((set, get) => ({
         method: "PUT",
         body: categoryDetails,
         id: categoryDetails.id,
+      });
+    } catch (error) {
+      set({
+        errorMessage: error.message,
+        hasError: true,
+      });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  // DELETE CATEGORY
+  removeCategory: async (id) => {
+    if (!id) return;
+    set({
+      isLoading: true,
+      errorMessage: "",
+      hasError: false,
+    });
+    try {
+      return await apiCall({
+        token: get().token,
+        method: "DELETE",
+        id,
       });
     } catch (error) {
       set({

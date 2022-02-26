@@ -18,7 +18,7 @@ export default function Operation({
       : "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800";
 
   return (
-    <tr>
+    <tr className="hover:bg-gray-200">
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10">{id}</div>

@@ -82,7 +82,9 @@ export default function Details() {
         <p>{errorMessage}</p>
       ) : (
         <div>
-          <h3>Update Operation {operationId}</h3>
+          <p className="ml-5 font-semibold text-lg dark:text-white">
+            Update Operation {operationId}
+          </p>
 
           <FormAdd
             handleSubmit={handleSubmit}

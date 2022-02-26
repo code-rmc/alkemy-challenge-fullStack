@@ -6,7 +6,6 @@ import Header from "./components/Header";
 function App() {
   return (
     <UseUserContext>
-      <Header />
       <AppRoutes />
     </UseUserContext>
   );
